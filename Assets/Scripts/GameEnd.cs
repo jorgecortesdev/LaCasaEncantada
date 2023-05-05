@@ -6,12 +6,15 @@ using UnityEngine.SceneManagement;
 public class GameEnd : MonoBehaviour
 {
     public GameObject player;
+    public AudioSource winSound;
+    public AudioSource loseSound;
     public CanvasGroup backgroundWin;
     public CanvasGroup backgroundLose;
     public float fadeDuration;
     public float displayImageDuration;
     private bool isPlayer;
     private bool isCaught;
+    private bool hasAudioPlayed;
     private float timer;
 
     // Start is called before the first frame update
@@ -25,11 +28,11 @@ public class GameEnd : MonoBehaviour
     {
         if (isPlayer)
         {
-            EndLevel(backgroundWin, false);
+            EndLevel(backgroundWin, false, winSound);
         }
         else if (isCaught)
         {
-            EndLevel(backgroundLose, true);
+            EndLevel(backgroundLose, true, loseSound);
         }
     }
 
@@ -41,8 +44,14 @@ public class GameEnd : MonoBehaviour
         }
     }
 
-    private void EndLevel(CanvasGroup imgCanvas, bool restart)
+    private void EndLevel(CanvasGroup imgCanvas, bool restart, AudioSource sound)
     {
+        if (!hasAudioPlayed)
+        {
+            sound.Play();
+            hasAudioPlayed = true;
+        }
+
         timer += Time.deltaTime;
 
         imgCanvas.alpha = timer / fadeDuration;
